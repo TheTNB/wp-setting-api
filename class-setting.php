@@ -16,14 +16,14 @@ if ( ! class_exists( 'Setting' ) ):
 		 *
 		 * @var array
 		 */
-		protected array $settings_sections = array();
+		protected $settings_sections = array();
 
 		/**
 		 * 设置字段数组
 		 *
 		 * @var array
 		 */
-		protected array $settings_fields = array();
+		protected $settings_fields = array();
 
 		public function __construct() {
 			// 判断站点网络是否开启
@@ -41,7 +41,7 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 加载设置页面的样式和脚本
 		 */
-		function admin_enqueue_scripts(): void {
+		function admin_enqueue_scripts() {
 			wp_enqueue_style( 'wp-color-picker' );
 
 			wp_enqueue_media();
@@ -52,7 +52,7 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 设置设置子页面
 		 *
-		 * @param array $sections setting sections array
+		 * @param  array  $sections  setting sections array
 		 */
 		function set_sections( $sections ) {
 			$this->settings_sections = $sections;
@@ -63,9 +63,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 添加一个设置子页面
 		 *
-		 * @param array $section
+		 * @param  array  $section
 		 */
-		function add_section( $section ): static {
+		function add_section( $section ) {
 			$this->settings_sections[] = $section;
 
 			return $this;
@@ -74,11 +74,11 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 设置设置字段
 		 *
-		 * @param array $fields
+		 * @param  array  $fields
 		 *
 		 * @return $this
 		 */
-		function set_fields( array $fields ): static {
+		function set_fields( $fields ) {
 			$this->settings_fields = $fields;
 
 			return $this;
@@ -92,7 +92,7 @@ if ( ! class_exists( 'Setting' ) ):
 		 *
 		 * @return $this
 		 */
-		function add_field( $section, $field ): static {
+		function add_field( $section, $field ) {
 			$defaults = array(
 				'name'  => '',
 				'label' => '',
@@ -140,31 +140,31 @@ if ( ! class_exists( 'Setting' ) ):
 				foreach ( $field as $option ) {
 
 					$name     = $option['name'];
-					$type     = $option['type'] ?? 'text';
-					$label    = $option['label'] ?? '';
-					$callback = $option['callback'] ?? array(
+					$type     = isset( $option['type'] ) ? $option['type'] : 'text';
+					$label    = isset( $option['label'] ) ? $option['label'] : '';
+					$callback = isset ( $option['callback'] ) ? $option['callback'] : array(
 						$this,
 						'callback_' . $type
 					);
 
 					$args = array(
 						'id'                => $name,
-						'class'             => $option['class'] ?? $name,
+						'class'             => isset( $option['class'] ) ? $option['class'] : $name,
 						'label_for'         => "{$section}[{$name}]",
-						'desc'              => $option['desc'] ?? '',
-						'value'             => $option['value'] ?? '',
+						'desc'              => isset( $option['desc'] ) ? $option['desc'] : '',
+						'value'             => isset( $option['value'] ) ? $option['value'] : '',
 						'name'              => $label,
 						'section'           => $section,
-						'size'              => $option['size'] ?? null,
-						'options'           => $option['options'] ?? '',
-						'std'               => $option['default'] ?? '',
-						'sanitize_callback' => $option['sanitize_callback'] ?? '',
+						'size'              => isset( $option['size'] ) ? $option['size'] : null,
+						'options'           => isset( $option['options'] ) ? $option['options'] : '',
+						'std'               => isset( $option['default'] ) ? $option['default'] : '',
+						'sanitize_callback' => isset( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : '',
 						'type'              => $type,
-						'placeholder'       => $option['placeholder'] ?? '',
-						'min'               => $option['min'] ?? '',
-						'max'               => $option['max'] ?? '',
-						'step'              => $option['step'] ?? '',
-						'html'              => $option['html'] ?? '',
+						'placeholder'       => isset( $option['placeholder'] ) ? $option['placeholder'] : '',
+						'min'               => isset( $option['min'] ) ? $option['min'] : '',
+						'max'               => isset( $option['max'] ) ? $option['max'] : '',
+						'step'              => isset( $option['step'] ) ? $option['step'] : '',
+						'html'              => isset( $option['html'] ) ? $option['html'] : '',
 					);
 
 					add_settings_field( "{$section}[{$name}]", $label, $callback, $section, $section, $args );
@@ -180,9 +180,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * Get field description for display
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		public function get_field_description( array $args ) {
+		public function get_field_description( $args ) {
 			if ( $args['type'] == 'html' ) {
 				return $args['html'];
 			}
@@ -198,13 +198,13 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 文本框回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_text( array $args ): void {
+		function callback_text( $args ) {
 
 			$value       = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
-			$type        = $args['type'] ?? 'text';
+			$size        = isset( $args['size'] ) ? $args['size'] : 'regular';
+			$type        = isset( $args['type'] ) ? $args['type'] : 'text';
 			$placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
 
 			$html = sprintf( '<input type="%1$s" class="%2$s-text" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s/>',
@@ -217,21 +217,21 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 链接回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_url( array $args ): void {
+		function callback_url( $args ) {
 			$this->callback_text( $args );
 		}
 
 		/**
 		 * 数字选择回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_number( array $args ): void {
+		function callback_number( $args ) {
 			$value       = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
-			$type        = $args['type'] ?? 'number';
+			$size        = isset( $args['size'] ) ? $args['size'] : 'regular';
+			$type        = isset( $args['type'] ) ? $args['type'] : 'number';
 			$placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
 			$min         = ( $args['min'] == '' ) ? '' : ' min="' . $args['min'] . '"';
 			$max         = ( $args['max'] == '' ) ? '' : ' max="' . $args['max'] . '"';
@@ -247,9 +247,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 单选框回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_checkbox( array $args ): void {
+		function callback_checkbox( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
 
@@ -267,9 +267,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 多选框回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_multicheck( array $args ): void {
+		function callback_multicheck( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
 			$html  = '<fieldset>';
@@ -291,9 +291,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * Displays a radio button for a settings field
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_radio( array $args ): void {
+		function callback_radio( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
 			$html  = '<fieldset>';
@@ -314,12 +314,12 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 下拉框回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_select( array $args ): void {
+		function callback_select( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+			$size  = isset( $args['size'] ) ? $args['size'] : 'regular';
 			$html  = sprintf( '<select class="%1$s" name="%2$s[%3$s]" id="%2$s[%3$s]">', $size, $args['section'],
 				$args['id'] );
 
@@ -327,7 +327,7 @@ if ( ! class_exists( 'Setting' ) ):
 				$html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $value, $key, false ), $label );
 			}
 
-			$html .= sprintf( '</select>' );
+			$html .= '</select>';
 			$html .= $this->get_field_description( $args );
 
 			_e( $html, 'wp-settings-api' );
@@ -336,12 +336,12 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 文本域回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_textarea( array $args ): void {
+		function callback_textarea( $args ) {
 
 			$value       = esc_textarea( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size        = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+			$size        = isset( $args['size'] ) ? $args['size'] : 'regular';
 			$placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
 
 			$html = sprintf( '<textarea rows="5" cols="55" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]"%4$s>%5$s</textarea>',
@@ -354,23 +354,23 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * HTML源码回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 *
 		 * @return void
 		 */
-		function callback_html( array $args ): void {
+		function callback_html( $args ) {
 			_e( $this->get_field_description( $args ), 'wp-settings-api' );
 		}
 
 		/**
 		 * 富文本编辑器回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_wysiwyg( array $args ): void {
+		function callback_wysiwyg( $args ) {
 
 			$value = esc_textarea( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : '500px';
+			$size  = isset( $args['size'] ) ? $args['size'] : '500px';
 
 			echo '<div style="max-width: ' . esc_attr( $size ) . ';">';
 
@@ -394,14 +394,14 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 文件上传回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_file( array $args ): void {
+		function callback_file( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+			$size  = isset( $args['size'] ) ? $args['size'] : 'regular';
 			$id    = $args['section'] . '[' . $args['id'] . ']';
-			$label = $args['options']['button_label'] ?? __( 'Choose File' );
+			$label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File' );
 
 			$html = sprintf( '<input type="text" class="%1$s-text wpsa-url" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>',
 				$size, $args['section'], $args['id'], $value );
@@ -414,12 +414,12 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 密码文本框回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_password( array $args ): void {
+		function callback_password( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+			$size  = isset( $args['size'] ) ? $args['size'] : 'regular';
 
 			$html = sprintf( '<input type="password" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>',
 				$size, $args['section'], $args['id'], $value );
@@ -431,12 +431,12 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 颜色选择器回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_color( array $args ): void {
+		function callback_color( $args ) {
 
 			$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
-			$size  = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
+			$size  = isset( $args['size'] ) ? $args['size'] : 'regular';
 
 			$html = sprintf( '<input type="text" class="%1$s-text wp-color-picker-field" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s" data-default-color="%5$s" />',
 				$size, $args['section'], $args['id'], $value, $args['std'] );
@@ -449,9 +449,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * WordPress页面下拉框回调函数
 		 *
-		 * @param array $args settings field args
+		 * @param  array  $args  settings field args
 		 */
-		function callback_pages( array $args ): void {
+		function callback_pages( array $args ) {
 
 			$dropdown_args = array(
 				'selected' => esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) ),
@@ -469,7 +469,7 @@ if ( ! class_exists( 'Setting' ) ):
 		 *
 		 * @return mixed
 		 */
-		function sanitize_options( $options ): mixed {
+		function sanitize_options( $options ) {
 
 			if ( ! $options ) {
 				return $options;
@@ -491,11 +491,11 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 通过选项slug返回消毒后的值
 		 *
-		 * @param string $slug option slug
+		 * @param  string  $slug  option slug
 		 *
 		 * @return callable|false string or bool false
 		 */
-		function get_sanitize_callback( string $slug = '' ): callable|bool {
+		function get_sanitize_callback( $slug = '' ) {
 			if ( empty( $slug ) ) {
 				return false;
 			}
@@ -518,9 +518,9 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 获取设置字段的值
 		 *
-		 * @param string $option settings field name
-		 * @param string $section the section name this field belongs to
-		 * @param string $default default text if it's not found
+		 * @param  string  $option  settings field name
+		 * @param  string  $section  the section name this field belongs to
+		 * @param  string  $default  default text if it's not found
 		 *
 		 * @return string
 		 */
@@ -560,7 +560,7 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * Show the section settings forms
 		 *
-		 * This function displays every sections in a different form
+		 * This function displays every section in a different form
 		 */
 		function show_forms() {
 			?>
@@ -613,7 +613,8 @@ if ( ! class_exists( 'Setting' ) ):
 				}
 			}
 
-			wp_redirect( add_query_arg( 'multiple-network-settings-updated', 'true', esc_url_raw( $_POST['_wp_http_referer'] ) ) );
+			wp_redirect( add_query_arg( 'multiple-network-settings-updated', 'true',
+				esc_url_raw( $_POST['_wp_http_referer'] ) ) );
 			exit;
 		}
 
@@ -631,7 +632,7 @@ if ( ! class_exists( 'Setting' ) ):
 
                     // Switches option sections
                     $('.group').hide();
-                    var activetab = '';
+                    let activetab = '';
                     if (typeof (localStorage) != 'undefined') {
                         activetab = localStorage.getItem("activetab");
                     }
@@ -644,7 +645,7 @@ if ( ! class_exists( 'Setting' ) ):
                         }
                     }
 
-                    if (activetab != '' && $(activetab).length) {
+                    if (activetab !== '' && $(activetab).length) {
                         $(activetab).fadeIn();
                     } else {
                         $('.group:first').fadeIn();
@@ -660,7 +661,7 @@ if ( ! class_exists( 'Setting' ) ):
                             });
                     });
 
-                    if (activetab != '' && $(activetab + '-tab').length) {
+                    if (activetab !== '' && $(activetab + '-tab').length) {
                         $(activetab + '-tab').addClass('nav-tab-active');
                     } else {
                         $('.nav-tab-wrapper a:first').addClass('nav-tab-active');
@@ -668,7 +669,7 @@ if ( ! class_exists( 'Setting' ) ):
                     $('.nav-tab-wrapper a').click(function (evt) {
                         $('.nav-tab-wrapper a').removeClass('nav-tab-active');
                         $(this).addClass('nav-tab-active').blur();
-                        var clicked_group = $(this).attr('href');
+                        let clicked_group = $(this).attr('href');
                         if (typeof (localStorage) != 'undefined') {
                             localStorage.setItem("activetab", $(this).attr('href'));
                         }
@@ -680,10 +681,10 @@ if ( ! class_exists( 'Setting' ) ):
                     $('.wpsa-browse').on('click', function (event) {
                         event.preventDefault();
 
-                        var self = $(this);
+                        let self = $(this);
 
                         // Create the media frame.
-                        var file_frame = wp.media.frames.file_frame = wp.media({
+                        let file_frame = wp.media.frames.file_frame = wp.media({
                             title: self.data('uploader_title'),
                             button: {
                                 text: self.data('uploader_button_text'),
@@ -692,7 +693,7 @@ if ( ! class_exists( 'Setting' ) ):
                         });
 
                         file_frame.on('select', function () {
-                            attachment = file_frame.state().get('selection').first().toJSON();
+                            let attachment = file_frame.state().get('selection').first().toJSON();
                             self.prev('.wpsa-url').val(attachment.url).change();
                         });
 

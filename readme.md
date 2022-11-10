@@ -1,6 +1,7 @@
 # 这是什么？
 
 这是一个PHP类，它提供一种简洁的方式来使用 [WordPress Settings API](http://codex.wordpress.org/Settings_API)。
+支持 PHP5.6 - 8.1
 
 # 使用说明
 
