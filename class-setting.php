@@ -446,7 +446,6 @@ if ( ! class_exists( 'Setting' ) ):
 			_e( $html, 'wp-settings-api' );
 		}
 
-
 		/**
 		 * 页面下拉框回调函数
 		 *
@@ -618,6 +617,7 @@ if ( ! class_exists( 'Setting' ) ):
 				}
 			}
 
+			// 展示成功提示信息
 			set_transient( 'wpsa_multiple_notice', true, 5 );
 
 			wp_redirect( add_query_arg( 'multiple-network-settings-updated', 'true',
@@ -626,7 +626,8 @@ if ( ! class_exists( 'Setting' ) ):
 		}
 
 		/**
-		 * 输出JavaScript代码
+		 * 输出 JavaScript 代码
+		 * 这里的JavaScript代码用于监听页面切换和初始化颜色选择器与媒体选择器
          */
 		function script() {
 			?>

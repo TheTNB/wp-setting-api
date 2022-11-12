@@ -196,7 +196,6 @@ function load_setting_page() {
 function setting_page() {
 	echo '<h1>WP-Setting-API Demo</h1><span style="float: right;">By: WordPressCN@耗子</span>';
 	echo '<div class="wrap">';
-	settings_errors();
 
 	global $setting_api;
 	$setting_api->show_navigation();
