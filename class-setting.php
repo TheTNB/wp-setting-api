@@ -5,6 +5,7 @@ namespace WordPressCN;
 /**
  * 设置API
  * @author 耗子
+ * @version 20221112
  * @package WordPressCN
  */
 
@@ -115,7 +116,7 @@ if ( ! class_exists( 'Setting' ) ):
 		 * registers them to WordPress and ready for use.
 		 */
 		function admin_init() {
-			//register settings sections
+			// register settings sections
 			foreach ( $this->settings_sections as $section ) {
 				if ( ! get_option( $section['id'] ) ) {
 					add_option( $section['id'] );
@@ -135,7 +136,7 @@ if ( ! class_exists( 'Setting' ) ):
 				add_settings_section( $section['id'], $section['title'], $callback, $section['id'] );
 			}
 
-			//register settings fields
+			// register settings fields
 			foreach ( $this->settings_fields as $section => $field ) {
 				foreach ( $field as $option ) {
 
@@ -178,7 +179,7 @@ if ( ! class_exists( 'Setting' ) ):
 		}
 
 		/**
-		 * Get field description for display
+		 * 获取字段的描述供显示
 		 *
 		 * @param  array  $args  settings field args
 		 */
@@ -289,7 +290,7 @@ if ( ! class_exists( 'Setting' ) ):
 		}
 
 		/**
-		 * Displays a radio button for a settings field
+		 * 单选按钮回调函数
 		 *
 		 * @param  array  $args  settings field args
 		 */
@@ -447,7 +448,7 @@ if ( ! class_exists( 'Setting' ) ):
 
 
 		/**
-		 * WordPress页面下拉框回调函数
+		 * 页面下拉框回调函数
 		 *
 		 * @param  array  $args  settings field args
 		 */
@@ -536,9 +537,13 @@ if ( ! class_exists( 'Setting' ) ):
 		}
 
 		/**
-		 * 将导航显示为标签
+		 * 输出导航栏
 		 */
 		function show_navigation() {
+			if ( get_transient( 'wpsa_multiple_notice' ) ) {
+				echo '<div id="setting-error-settings_updated" class="notice notice-success settings-error is-dismissible"><p><strong>设置已保存</strong></p></div>';
+				delete_transient( 'wpsa_multiple_notice' );
+			}
 			$html = '<h2 class="nav-tab-wrapper">';
 
 			$count = count( $this->settings_sections );
@@ -558,9 +563,9 @@ if ( ! class_exists( 'Setting' ) ):
 		}
 
 		/**
-		 * Show the section settings forms
+		 * 输出设置字段表单
 		 *
-		 * This function displays every section in a different form
+		 * 此函数输出不同的设置字段在各自的表单中
 		 */
 		function show_forms() {
 			?>
@@ -589,7 +594,7 @@ if ( ! class_exists( 'Setting' ) ):
 		}
 
 		/**
-		 * 保存多站点模式下的选项
+		 * 保存多站点模式下的设置
 		 */
 		function multiple_network_options() {
 			// 检查权限
@@ -613,21 +618,21 @@ if ( ! class_exists( 'Setting' ) ):
 				}
 			}
 
+			set_transient( 'wpsa_multiple_notice', true, 5 );
+
 			wp_redirect( add_query_arg( 'multiple-network-settings-updated', 'true',
 				esc_url_raw( $_POST['_wp_http_referer'] ) ) );
 			exit;
 		}
 
 		/**
-		 * Tabbable JavaScript codes & Initiate Color Picker
-		 *
-		 * This code uses localstorage for displaying active tabs
-		 */
+		 * 输出JavaScript代码
+         */
 		function script() {
 			?>
             <script>
                 jQuery(document).ready(function ($) {
-                    //Initiate Color Picker
+                    // Initiate Color Picker
                     $('.wp-color-picker-field').wpColorPicker();
 
                     // Switches option sections
@@ -637,7 +642,7 @@ if ( ! class_exists( 'Setting' ) ):
                         activetab = localStorage.getItem("activetab");
                     }
 
-                    //if url has section id as hash then set it as active or override the current local storage value
+                    // if url has section id as hash then set it as active or override the current local storage value
                     if (window.location.hash) {
                         activetab = window.location.hash;
                         if (typeof (localStorage) != 'undefined') {

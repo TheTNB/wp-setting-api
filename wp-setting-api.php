@@ -23,6 +23,11 @@ $sections = array(
 	array(
 		'id'    => 'demo2',
 		'title' => __( '高级', 'demo' )
+	),
+	array(
+		'id'          => 'demo3',
+		'show_submit' => false,
+		'title'       => __( '测试', 'demo' )
 	)
 );
 
@@ -142,6 +147,14 @@ $fields = array(
 				'four'  => 'Four'
 			)
 		),
+	),
+	'demo3' => array(
+		array(
+			'name'  => 'html',
+			'label' => __( '无保存按钮', 'demo' ),
+			'type'  => 'html',
+			'html'  => '<h1>通过给页面设置show_submit = false属性，即可隐藏保存按钮</h1>'
+		)
 	)
 );
 
