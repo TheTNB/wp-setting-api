@@ -1,12 +1,14 @@
 <?php
 
-namespace WordPressCN;
+namespace HaoZiTeam;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 设置API
  * @author 耗子
- * @version 20221112
- * @package WordPressCN
+ * @version 2023/02/23
+ * @package HaoZiTeam
  */
 
 if ( ! class_exists( 'Setting' ) ):
@@ -628,7 +630,7 @@ if ( ! class_exists( 'Setting' ) ):
 		/**
 		 * 输出 JavaScript 代码
 		 * 这里的JavaScript代码用于监听页面切换和初始化颜色选择器与媒体选择器
-         */
+		 */
 		function script() {
 			?>
             <script>
