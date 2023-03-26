@@ -2,16 +2,16 @@
 /**
  * Plugin Name: WP-Setting-API Demo
  * Description: WP-Setting-API 的使用示例插件
- * Author: WordPressCN@耗子
- * Author URI: https://hzbk.net/
- * Version: 1.0.0
+ * Author: 耗子开源
+ * Author URI: https://github.com/HaoZi-Team
+ * Version: 1.0.1
  * License: GPLv3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined( 'ABSPATH' ) or exit;
 include_once 'class-setting.php';
 
-use WordPressCN\Setting as Setting;
+use HaoZiTeam\Setting as Setting;
 
 $setting_api = new Setting;
 
