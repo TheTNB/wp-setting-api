@@ -1,0 +1,30 @@
+{
+    "name": "haozi-team/wp-setting-api",
+    "description": "WordPress Setting API for developers",
+    "keywords": [
+      "wordpress"
+    ],
+    "homepage": "https://github.com/haozi-team/wp-setting-api",
+    "type": "library",
+    "require": {
+      "php": ">=7.4"
+    },
+    "license": "GPLv3",
+    "autoload": {
+      "psr-4": {
+        "HaoZiTeam\\Setting\\": "src/"
+      }
+    },
+    "authors": [
+      {
+        "name": "耗子",
+        "email": "i@haozi.net"
+      }
+    ],
+    "config": {
+      "platform": {
+        "php": "7.4"
+      }
+    },
+    "prefer-stable": true
+  }
