@@ -7,7 +7,7 @@
     "homepage": "https://github.com/haozi-team/wp-setting-api",
     "type": "library",
     "require": {
-      "php": ">=7.4"
+      "php": ">=5.6"
     },
     "license": "GPL-3.0-or-later",
     "autoload": {
