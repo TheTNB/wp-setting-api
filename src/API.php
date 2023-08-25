@@ -597,37 +597,38 @@ if ( ! class_exists( 'API' ) ) {
          * 保存多站点模式下的设置
          */
         function multiple_network_options() {
-            // 检查权限
-            if ( ! current_user_can( 'manage_network_options' ) ) {
-                wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
-            }
-            // 消毒数据
+			// 检查权限
+			if ( ! current_user_can( 'manage_network_options' ) ) {
+				wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+			}
+			// 消毒数据
 
-            $option_page = sanitize_text_field( $_POST['option_page'] );
+			$option_page = sanitize_text_field( $_POST['option_page'] );
 
-            check_admin_referer( $option_page . '-options' );
+			check_admin_referer( $option_page . '-options' );
 
-            global $new_allowed_options;
-            $options = $new_allowed_options[ $option_page ];
+			global $new_allowed_options;
+			$options = $new_allowed_options[ $option_page ];
 
-            foreach ( $options as $option ) {
-                if ( isset( $_POST[ $option ] ) ) {
-                    foreach ( $_POST[ $option ] as $k => $v ) {
-                        $_POST[ $option ][ $k ] = sanitize_text_field( $v );
-                    }
-                    update_site_option( $option, $_POST[ $option ] );
-                } else {
-                    delete_site_option( $option );
-                }
-            }
+			foreach ( $options as $option ) {
+				if ( isset( $_POST[ $option ] ) ) {
+					$_POST[ $option ] = self::sanitize_options( $_POST[ $option ] );
+					foreach ( $_POST[ $option ] as $k => $v ) {
+						$_POST[ $option ][ $k ] = $v;
+					}
+					update_site_option( $option, $_POST[ $option ] );
+				} else {
+					delete_site_option( $option );
+				}
+			}
 
-            // 展示成功提示信息
-            set_transient( 'wpsa_multiple_notice', true, 5 );
+			// 展示成功提示信息
+			set_transient( 'wpsa_multiple_notice', true, 5 );
 
-            wp_redirect( add_query_arg( 'multiple-network-settings-updated', 'true',
-                esc_url_raw( $_POST['_wp_http_referer'] ) ) );
-            exit;
-        }
+			wp_redirect( add_query_arg( 'multiple-network-settings-updated', 'true',
+				esc_url_raw( $_POST['_wp_http_referer'] ) ) );
+			exit;
+		}
 
         /**
          * 输出 JavaScript 代码
