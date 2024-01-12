@@ -1,14 +1,13 @@
 <?php
 
-namespace HaoZiTeam\Setting;
+namespace TheTNB\Setting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * API
  * @author 耗子
- * @version 2023/08/23
- * @package HaoZiTeam
+ * @version 2024/01/13
  */
 if ( ! class_exists( 'API' ) ) {
     class API {
