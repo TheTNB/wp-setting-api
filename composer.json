@@ -1,10 +1,10 @@
 {
-    "name": "haozi-team/wp-setting-api",
+    "name": "thetnb/wp-setting-api",
     "description": "WordPress Setting API for developers",
     "keywords": [
       "wordpress"
     ],
-    "homepage": "https://github.com/haozi-team/wp-setting-api",
+    "homepage": "https://github.com/thetnb/wp-setting-api",
     "type": "library",
     "require": {
       "php": ">=5.6"
@@ -12,7 +12,7 @@
     "license": "GPL-3.0-or-later",
     "autoload": {
       "psr-4": {
-        "HaoZiTeam\\Setting\\": "src/"
+        "TheTNB\\Setting\\": "src/"
       }
     },
     "authors": [
